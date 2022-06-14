@@ -16,26 +16,26 @@
 */
 resource "azurerm_resource_group" "ViptelaControllers" {
   name     = "ViptelaControllers"
-  location = "${var.region}"
+  location = var.region
 }
 
 /*
   Security Group
 */
 resource "azurerm_network_security_group" "ViptelaControllers" {
-  name = "ViptelaControllers"
-  location = "${var.region}"
-  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+  name                = "ViptelaControllers"
+  location            = var.region
+  resource_group_name = azurerm_resource_group.ViptelaControllers.name
 
   security_rule {
-    name = "ControlTCP"
-    priority = 100
-    direction = "Inbound"
-    access = "Allow"
-    protocol = "Tcp"
-    source_port_range = "*"
-    destination_port_range = "23456-24156"
-    source_address_prefix = "*"
+    name                       = "ControlTCP"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "23456-24156"
+    source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 
@@ -109,9 +109,9 @@ resource "azurerm_network_security_group" "ViptelaControllers" {
 */
 resource "azurerm_virtual_network" "ViptelaControllers" {
   name                = "ViptelaControllers"
-  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+  resource_group_name = azurerm_resource_group.ViptelaControllers.name
   address_space       = ["${var.cidr_block}"]
-  location            = "${var.region}"
+  location            = var.region
   dns_servers         = ["208.67.222.222"]
 
   tags = {
@@ -124,8 +124,8 @@ resource "azurerm_virtual_network" "ViptelaControllers" {
 */
 resource "azurerm_route_table" "ViptelaControllers" {
   name                = "ViptelaControllers"
-  location            = "${var.region}"
-  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+  location            = var.region
+  resource_group_name = azurerm_resource_group.ViptelaControllers.name
 
   route {
     name           = "DefaultInternet"
@@ -143,14 +143,14 @@ resource "azurerm_route_table" "ViptelaControllers" {
 */
 resource "azurerm_subnet" "ViptelaControllers" {
   name                 = "ViptelaControllers"
-  resource_group_name  = "${azurerm_resource_group.ViptelaControllers.name}"
-  virtual_network_name = "${azurerm_virtual_network.ViptelaControllers.name}"
-  address_prefix       = "${var.cidr_block}"
+  resource_group_name  = azurerm_resource_group.ViptelaControllers.name
+  virtual_network_name = azurerm_virtual_network.ViptelaControllers.name
+  address_prefixes     = ["${var.cidr_block}"]
 }
 
 resource "azurerm_subnet_route_table_association" "test" {
-  subnet_id      = "${azurerm_subnet.ViptelaControllers.id}"
-  route_table_id = "${azurerm_route_table.ViptelaControllers.id}"
+  subnet_id      = azurerm_subnet.ViptelaControllers.id
+  route_table_id = azurerm_route_table.ViptelaControllers.id
 }
 
 /*
@@ -159,8 +159,8 @@ resource "azurerm_subnet_route_table_association" "test" {
 resource "azurerm_availability_set" "avsetvmanage" {
   name                = "avsetvmanage"
   managed             = true
-  location            = "${var.region}"
-  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+  location            = var.region
+  resource_group_name = azurerm_resource_group.ViptelaControllers.name
 
   tags = {
     Name = "avsetvmanage"
@@ -170,8 +170,8 @@ resource "azurerm_availability_set" "avsetvmanage" {
 resource "azurerm_availability_set" "avsetvbond" {
   name                = "avsetvbond"
   managed             = true
-  location            = "${var.region}"
-  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+  location            = var.region
+  resource_group_name = azurerm_resource_group.ViptelaControllers.name
 
   tags = {
     Name = "avsetvbond"
@@ -184,8 +184,8 @@ resource "azurerm_availability_set" "avsetvbond" {
 resource "azurerm_availability_set" "avsetvsmart" {
   name                = "avsetvsmart"
   managed             = true
-  location            = "${var.region}"
-  resource_group_name = "${azurerm_resource_group.ViptelaControllers.name}"
+  location            = var.region
+  resource_group_name = azurerm_resource_group.ViptelaControllers.name
 
   tags = {
     Name = "avsetvsmart"
