@@ -1,3 +1,16 @@
+resource "azurerm_image" "vmanage_image" {
+  name                = "vmanage_image"
+  location            = data.terraform_remote_state.spam.outputs.region
+  resource_group_name = data.terraform_remote_state.spam.outputs.resource_group_name
+  hyper_v_generation  = "V1"
+
+  os_disk {
+    os_type  = "Linux"
+    os_state = "Generalized"
+    blob_uri = var.vmanage_uri
+  }
+}
+
 module "vmanage" {
   source                 = "./vmanage"
   region                 = data.terraform_remote_state.spam.outputs.region

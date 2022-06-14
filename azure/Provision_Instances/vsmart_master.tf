@@ -1,3 +1,16 @@
+resource "azurerm_image" "vsmart_image" {
+  name                = "vsmart_image"
+  location            = data.terraform_remote_state.spam.outputs.region
+  resource_group_name = data.terraform_remote_state.spam.outputs.resource_group_name
+  hyper_v_generation  = "V1"
+
+  os_disk {
+    os_type  = "Linux"
+    os_state = "Generalized"
+    blob_uri = var.vsmart_uri
+  }
+}
+
 module "vsmart" {
   source                 = "./vsmart"
   region                 = data.terraform_remote_state.spam.outputs.region
