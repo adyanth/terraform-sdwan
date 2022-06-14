@@ -8,3 +8,6 @@ variable "resource_group_name" {}
 variable "username" {}
 variable "password" {}
 variable "avsetvmanage" {}
+variable "vbond" {}
+variable "org_name" {}
+variable "sp_org_name" {}

@@ -8,3 +8,5 @@ variable "resource_group_name" {}
 variable "username" {}
 variable "password" {}
 variable "avsetvbond" {}
+variable "org_name" {}
+variable "sp_org_name" {}
