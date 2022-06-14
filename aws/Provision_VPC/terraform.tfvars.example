@@ -1,0 +1,6 @@
+region     = "us-east-1"
+cidr_block = "10.200.200.0/24"
+
+# https://docs.aws.amazon.com/cli/latest/userguide/getting-started-prereqs.html#getting-started-prereqs-keys 
+access_key = "aws_access_key"
+secret_key = "aws_secret_key"
