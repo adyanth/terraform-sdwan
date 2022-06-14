@@ -1,5 +1,5 @@
 provider "aws" {
-  shared_credentials_file = "~/.aws/credentials"
-  profile                 = "terraform"
-  region                  = "${data.terraform_remote_state.spam.outputs.region}"
+  access_key = var.access_key
+  secret_key = var.secret_key
+  region     = data.terraform_remote_state.spam.outputs.region
 }

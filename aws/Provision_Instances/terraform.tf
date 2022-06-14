@@ -7,6 +7,8 @@ variable "vsmart_count" {}
 variable "vbond_instances_type" {}
 variable "vmanage_instances_type" {}
 variable "vsmart_instances_type" {}
+variable "access_key" {}
+variable "secret_key" {}
 
 data "terraform_remote_state" "spam" {
   backend = "local"
