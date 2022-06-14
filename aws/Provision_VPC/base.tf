@@ -22,7 +22,7 @@ data "aws_availability_zones" "available" {
   VPC
 */
 resource "aws_vpc" "viptela" {
-  cidr_block           = "${var.cidr_block}"
+  cidr_block           = var.cidr_block
   enable_dns_hostnames = true
 
   tags = {
@@ -34,7 +34,7 @@ resource "aws_vpc" "viptela" {
   Internet Gateway
 */
 resource "aws_internet_gateway" "viptela" {
-  vpc_id = "${aws_vpc.viptela.id}"
+  vpc_id = aws_vpc.viptela.id
 
   tags = {
     Name = "Viptela Controllers"
@@ -45,9 +45,9 @@ resource "aws_internet_gateway" "viptela" {
   Public Subnets
 */
 resource "aws_subnet" "public_subnet_az_1" {
-  vpc_id            = "${aws_vpc.viptela.id}"
+  vpc_id            = aws_vpc.viptela.id
   cidr_block        = cidrsubnet("${var.cidr_block}", 1, 0)
-  availability_zone = "${data.aws_availability_zones.available.names[0]}"
+  availability_zone = data.aws_availability_zones.available.names[0]
 
   tags = {
     Name = "subnet_public_az_1"
@@ -56,9 +56,9 @@ resource "aws_subnet" "public_subnet_az_1" {
 }
 
 resource "aws_subnet" "public_subnet_az_2" {
-  vpc_id            = "${aws_vpc.viptela.id}"
+  vpc_id            = aws_vpc.viptela.id
   cidr_block        = cidrsubnet("${var.cidr_block}", 1, 1)
-  availability_zone = "${data.aws_availability_zones.available.names[1]}"
+  availability_zone = data.aws_availability_zones.available.names[1]
 
   tags = {
     Name = "subnet_public_az_2"
@@ -70,11 +70,11 @@ resource "aws_subnet" "public_subnet_az_2" {
   Public Route Table
 */
 resource "aws_route_table" "public" {
-  vpc_id = "${aws_vpc.viptela.id}"
+  vpc_id = aws_vpc.viptela.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = "${aws_internet_gateway.viptela.id}"
+    gateway_id = aws_internet_gateway.viptela.id
   }
 
   tags = {
@@ -87,13 +87,13 @@ resource "aws_route_table" "public" {
   Public Route Table Associations
 */
 resource "aws_route_table_association" "subnet_p1_to_rt_public" {
-  subnet_id      = "${aws_subnet.public_subnet_az_1.id}"
-  route_table_id = "${aws_route_table.public.id}"
+  subnet_id      = aws_subnet.public_subnet_az_1.id
+  route_table_id = aws_route_table.public.id
 }
 
 resource "aws_route_table_association" "subnet_p2_to_rt_public" {
-  subnet_id      = "${aws_subnet.public_subnet_az_2.id}"
-  route_table_id = "${aws_route_table.public.id}"
+  subnet_id      = aws_subnet.public_subnet_az_2.id
+  route_table_id = aws_route_table.public.id
 }
 
 /*
@@ -159,7 +159,7 @@ resource "aws_security_group" "Vipela_Control_Plane" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  vpc_id = "${aws_vpc.viptela.id}"
+  vpc_id = aws_vpc.viptela.id
 
   tags = {
     Name = "Viptela Control and Management"

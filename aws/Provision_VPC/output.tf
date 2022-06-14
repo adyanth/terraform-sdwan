@@ -1,17 +1,17 @@
 output "region" {
-  value = "${var.region}"
+  value = var.region
 }
 
 output "viptela_vpc_id" {
-  value = "${aws_vpc.viptela.id}"
+  value = aws_vpc.viptela.id
 }
 
 output "cidr_block" {
-  value = "${var.cidr_block}"
+  value = var.cidr_block
 }
 
 output "Vipela_Control_Plane" {
-  value = "${aws_security_group.Vipela_Control_Plane.id}"
+  value = aws_security_group.Vipela_Control_Plane.id
 }
 
 output "subnets" {
