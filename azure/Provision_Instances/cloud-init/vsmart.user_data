@@ -1,69 +1,71 @@
-Content-Type: multipart/mixed; boundary="==BOUNDARY=="
-MIME-Version: 1.0
-
---==BOUNDARY==
-Content-Type: text/cloud-boothook; charset="us-ascii"
-
-#cloud-boothook
-system
- host-name vsmart
-
- aaa
-  auth-order local radius tacacs
-  usergroup basic
-   task system read write
-   task interface read write
-  !
-
-  usergroup netadmin
-  !
-
-  usergroup operator
-   task system read
-   task interface read
-   task policy read
-   task routing read
-   task security read
-  !
-
-  user admin
-   password $6$ZSa1yl/RYmnRIiXw$F7.lE6cHwglxBDWlbFoJEEOifm3bDuTYaGIfi61BgYgJmlswFIOrsyh5fdLs0TH998EmeUU77JECV6fXSU3uk0
-  !
- !
-
- logging
-  disk
-   enable
-  !
- !
-!
-
-omp
- no shutdown
- graceful-restart
-!
-
-vpn 0
- interface eth1
-  ip dhcp-client
-  tunnel-interface
-   allow-service dhcp
-   allow-service dns
-   allow-service icmp
-   no allow-service sshd
-   allow-service netconf
-   no allow-service ntp
-   no allow-service stun
-   allow-service https
-  !
-  no shutdown
- !
-!
-
-vpn 512
- interface eth0
-  ip dhcp-client
-  no shutdown
- !
-!
---==BOUNDARY==
+#cloud-config
+write_files:
+  - path: /etc/default/personality
+    content: "vsmart\n"
+  - path: /etc/default/inited
+    content: "1\n"
+  - path: /etc/confd/init/zcloud.xml
+    content: |
+      <config xmlns="http://tail-f.com/ns/config/1.0">
+        <system xmlns="http://viptela.com/system">
+          <personality>vsmart</personality>
+          <device-model>vsmart</device-model>
+          <organization-name>${org_name}</organization-name>
+          <sp-organization-name>${sp_org_name}</sp-organization-name>
+          <vbond>
+            <remote>${vbond}</remote>
+            <port>12346</port>
+          </vbond>
+          <site-id>${siteid}</site-id>
+          <system-ip>100.1.22.${index}</system-ip>
+          <host-name>${name}</host-name>
+          <domain-id>${domainid}</domain-id>
+          <aaa>
+            <user>
+              <name>admin</name>
+              <password>$6$90a50dab62459d97$pEsWPn9C6j6ShW.0mQfGqcx3VcYVdMsh9U3nYy2StFaXdR9rToEaxpJDO8SJJiX8a9HrTqOKW.urLd/WNSF1n1</password>
+              <group>netadmin</group>
+            </user>
+          </aaa>
+        </system>
+        <vpn xmlns="http://viptela.com/vpn">
+          <vpn-instance>
+            <vpn-id>0</vpn-id>
+            <interface>
+              <if-name>eth0</if-name>
+              <ip>
+                <dhcp-client>true</dhcp-client>
+              </ip>
+              <tunnel-interface>
+                <encapsulation>
+                  <encap>ipsec</encap>
+                </encapsulation>
+                <color>
+                  <value>mpls</value>
+                </color>
+                <allow-service>
+                  <all>true</all>
+                  <dhcp>true</dhcp>
+                  <dns>true</dns>
+                  <icmp>true</icmp>
+                  <ntp>true</ntp>
+                  <stun>false</stun>
+                  <sshd>true</sshd>
+                  <netconf>true</netconf>
+                </allow-service>
+              </tunnel-interface>
+              <shutdown>false</shutdown>
+            </interface>
+          </vpn-instance>
+          <vpn-instance>
+            <vpn-id>512</vpn-id>
+            <interface>
+              <if-name>eth1</if-name>
+              <ip>
+                <dhcp-client>true</dhcp-client>
+              </ip>
+              <shutdown>false</shutdown>
+            </interface>
+          </vpn-instance>
+        </vpn>
+      </config>
