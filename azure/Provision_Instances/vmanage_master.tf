@@ -24,6 +24,6 @@ module "vmanage" {
   username               = var.username
   password               = var.password
   vbond                  = module.vbond.vbonds_vbondEth1Ip
-  org_name               = ""
-  sp_org_name            = ""
+  org_name               = var.org_name
+  sp_org_name            = var.sp_org_name
 }

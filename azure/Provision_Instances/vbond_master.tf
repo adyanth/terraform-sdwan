@@ -23,6 +23,6 @@ module "vbond" {
   resource_group_name    = data.terraform_remote_state.spam.outputs.resource_group_name
   username               = var.username
   password               = var.password
-  org_name               = ""
-  sp_org_name            = ""
+  org_name               = var.org_name
+  sp_org_name            = var.sp_org_name
 }
